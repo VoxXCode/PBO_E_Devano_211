@@ -1,16 +1,16 @@
-import java.util.Scanner;
+import java.util.Scanner; // Mengimpor Scanner untuk membaca input dari pengguna
 
+// Kelas utama (Main) untuk menjalankan program
 public class Main {
     public static void main(String[] args) {
-        // Mendeklarasikan variabel untuk menyimpan kredensial login
-        String Username;
-        String Password;
-        String Name;
-        String Nim;
         int Pilihan; // Variabel untuk menyimpan pilihan login dari pengguna
 
         // Scanner untuk membaca input dari konsol
         Scanner objInput = new Scanner(System.in);
+        
+        // Membuat objek Admin dan Mahasiswa
+        Admin adminObj = new Admin();
+        Mahasiswa mahasiswaObj = new Mahasiswa();
 
         // Menampilkan pilihan login (Admin atau Mahasiswa)
         System.out.println("Pilih login:");
@@ -18,38 +18,23 @@ public class Main {
         System.out.println("2. Mahasiswa");
         System.out.print("Masukan Pilihan: ");
         Pilihan = objInput.nextInt(); // Membaca pilihan pengguna
-        objInput.nextLine();
-
+        objInput.nextLine(); // Membersihkan newline dari buffer
 
         // Memeriksa jenis login yang dipilih oleh pengguna
-        if (Pilihan == 1) { // Login Admin
-            // Meminta username dan password Admin
+        if (Pilihan == 1) { // Jika pengguna memilih Admin
             System.out.print("Masukan username: ");
-            Username = objInput.nextLine();
+            adminObj.username = objInput.nextLine(); // Membaca username Admin
             System.out.print("Masukan password: ");
-            Password = objInput.nextLine();
-
-            // Memvalidasi kredensial Admin
-            if (Username.equals("Admin211") && Password.equals("password211")) {
-                System.out.println("Login Admin berhasil!"); // Pesan sukses untuk Admin
-            } else {
-                System.out.println("Login gagal! Username atau password salah."); // Pesan gagal untuk Admin
-            }
-        } else if (Pilihan == 2) { // Login Mahasiswa
-            // Meminta nama dan NIM Mahasiswa
-            System.out.print("Masukan Name: ");
-            Name = objInput.nextLine();
+            adminObj.password = objInput.nextLine(); // Membaca password Admin
+            
+            adminObj.login(); // Memanggil metode login dari Admin
+        } else if (Pilihan == 2) { // Jika pengguna memilih Mahasiswa
+            System.out.print("Masukan Nama: ");
+            mahasiswaObj.nama = objInput.nextLine(); // Membaca nama Mahasiswa
             System.out.print("Masukan Nim: ");
-            Nim = objInput.nextLine();
-
-            // Memvalidasi kredensial Mahasiswa (contoh pengecekan)
-            if (Name.equals("Devano Aghanza Putra Pradessah") && Nim.equals("202410370110211")) {
-                System.out.println("Login Mahasiswa berhasil!"); // Pesan sukses untuk Mahasiswa
-                System.out.println("Name: " + Name); // Menampilkan nama
-                System.out.println("Nim: " + Nim); // Menampilkan NIM
-            } else {
-                System.out.println("Login gagal! Name atau Nim salah."); // Pesan gagal untuk Mahasiswa
-            }
+            mahasiswaObj.nim = objInput.nextLine(); // Membaca NIM Mahasiswa
+            
+            mahasiswaObj.login(); // Memanggil metode login dari Mahasiswa
         } else {
             System.out.println("Pilihan tidak valid."); // Pesan jika pilihan tidak valid
         }
