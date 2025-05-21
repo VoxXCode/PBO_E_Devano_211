@@ -83,7 +83,7 @@ public class ManagementStok {
 
                         try {
                             System.out.print("Masukkan angka barang yang ingin dikurangi: ");
-                            inputPilihan = input.nextInt(); // Membaca indeks barang
+                            inputPilihan = input.nextInt(); // Membaca indeks barang"
                             input.nextLine();
 
                             System.out.print("Masukkan jumlah barang yang ingin dikurangi: ");

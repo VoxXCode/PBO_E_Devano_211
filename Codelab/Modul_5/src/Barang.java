@@ -1,4 +1,4 @@
-// Kelas Barang merepresentasikan sebuah item dalam stok
+// Kelas Barang merepresentasikan sebuah item dalam stok.
 public class Barang {
     private String nama;  // Nama barang
     private int stok;     // Jumlah stok barang

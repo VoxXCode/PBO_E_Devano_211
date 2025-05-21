@@ -1,4 +1,4 @@
-// Kelas exception khusus untuk menangani kasus stok barang yang tidak mencukupi
+// Kelas exception khusus untuk menangani kasus stok barang yang tidak mencukupi.
 public class StokTidakCukupException extends Exception {
 
     // Konstruktor yang menerima pesan error saja
