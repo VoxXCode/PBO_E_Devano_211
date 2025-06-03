@@ -1,79 +1,177 @@
 package com.praktikum.users;
 
-import com.praktikum.actions.AdminActions;  // Import interface AdminActions
+import com.praktikum.main.LoginSystem;
+import com.praktikum.data.Item;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
-public class Admin extends User implements AdminActions {
-    private String password; // Variabel untuk menyimpan password Admin
-    private String username; // Variabel untuk menyimpan username Admin
+/**
+ * Kelas Admin adalah turunan dari kelas abstrak User.
+ * Admin dapat mengelola laporan barang dan (nantinya) data mahasiswa.
+ */
+public class Admin extends User {
+    private String username;
+    private String password;
 
     // Konstruktor Admin
     public Admin(String username, String password) {
-        super("Devano Aghanza Putra Pradessah", "202410370110211"); // Memanggil konstruktor User
+        super(username, "ADMIN001"); // nama = username, nim tetap sebagai ADMIN001
         this.username = username;
         this.password = password;
     }
 
-    // Metode login untuk Admin
+    // Getter untuk username
+    public String getUsername() {
+        return username;
+    }
+
+    // Getter untuk password
+    public String getPassword() {
+        return password;
+    }
+
+    // Override method login dari User
     @Override
     public void login() {
-        if (username.equals("Admin211") && password.equals("password211")) {
-            System.out.println("Login Admin berhasil!");
-            displayInfo(); // Tampilkan informasi Admin
-        } else {
-            System.out.println("Login gagal! Username atau password salah.");
-        }
+        System.out.println("Admin " + username + " berhasil login!");
     }
 
-    // Menampilkan informasi Admin
+    // Override method untuk menampilkan menu Admin
     @Override
-    public void displayInfo() {
-        System.out.println("Informasi Admin:");
-        System.out.println("Nama: " + getNama());
-        System.out.println("NIM : " + getNim());
-        System.out.println("Username: " + username);
-    }
+    public void displayAppMenu(Scanner scanner) {
+        int choice;
+        do {
+            System.out.println("\n=== MENU ADMIN ===");
+            System.out.println("1. Kelola Laporan Barang");
+            System.out.println("2. Kelola Data Mahasiswa");
+            System.out.println("0. Logout");
+            System.out.print("Pilihan: ");
 
-    // Menu aplikasi untuk Admin
-    @Override
-    public void displayAppMenu() {
-        try (Scanner scanner = new Scanner(System.in)) {
-            int pilihan;
+            try {
+                choice = scanner.nextInt();
+                scanner.nextLine(); // Membersihkan newline
 
-            do {
-                System.out.println("\n=== Menu Admin ===");
-                System.out.println("1. Kelola Laporan Barang");
-                System.out.println("2. Kelola Data Mahasiswa");
-                System.out.println("0. Logout");
-                System.out.print("Pilih menu: ");
-                pilihan = scanner.nextInt();
-                scanner.nextLine(); // Konsumsi newline
-
-                switch (pilihan) {
+                switch (choice) {
                     case 1:
-                        manageItems(); // Memanggil metode kelola barang
+                        manageItems(scanner); // Kelola laporan barang
                         break;
                     case 2:
-                        manageUsers(); // Memanggil metode kelola mahasiswa
+                        manageUsers(scanner); // Placeholder untuk fitur kelola mahasiswa
                         break;
                     case 0:
                         System.out.println("Logout berhasil.");
                         break;
                     default:
-                        System.out.println("Pilihan tidak valid. Silakan coba lagi.");
+                        System.out.println("Pilihan tidak valid!");
                 }
-            } while (pilihan != 0); // Loop sampai pengguna memilih untuk logout
+            } catch (InputMismatchException e) {
+                System.out.println("Input harus berupa angka!");
+                scanner.nextLine();
+                choice = -1;
+            }
+        } while (choice != 0);
+    }
+
+    // Menu kelola laporan barang
+    private void manageItems(Scanner scanner) {
+        int choice;
+        do {
+            System.out.println("\n=== KELOLA LAPORAN BARANG ===");
+            System.out.println("1. Lihat Semua Laporan");
+            System.out.println("2. Tandai Barang Telah Diambil");
+            System.out.println("0. Kembali");
+            System.out.print("Pilihan: ");
+
+            try {
+                choice = scanner.nextInt();
+                scanner.nextLine();
+
+                switch (choice) {
+                    case 1:
+                        viewAllReportedItems();
+                        break;
+                    case 2:
+                        markItemAsClaimed(scanner);
+                        break;
+                    case 0:
+                        break;
+                    default:
+                        System.out.println("Pilihan tidak valid!");
+                }
+            } catch (InputMismatchException e) {
+                System.out.println("Input harus berupa angka!");
+                scanner.nextLine();
+                choice = -1;
+            }
+        } while (choice != 0);
+    }
+
+    // Menampilkan semua laporan barang
+    private void viewAllReportedItems() {
+        System.out.println("\n=== DAFTAR LAPORAN ===");
+        if (LoginSystem.reportedItems.isEmpty()) {
+            System.out.println("Belum ada laporan barang.");
+            return;
+        }
+
+        for (int i = 0; i < LoginSystem.reportedItems.size(); i++) {
+            Item item = LoginSystem.reportedItems.get(i);
+            System.out.println("\nIndex: " + i);
+            System.out.println("Nama       : " + item.getItemName());
+            System.out.println("Deskripsi  : " + item.getDescription());
+            System.out.println("Lokasi     : " + item.getLocation());
+            System.out.println("Status     : " + item.getStatus());
         }
     }
 
-    // Implementasi dari interface AdminActions
-    @Override
-    public void manageItems() {
-        System.out.println(">> Fitur Kelola Barang Belum Tersedia <<");
+    // Menandai barang telah diambil (ubah status menjadi 'Claimed')
+    private void markItemAsClaimed(Scanner scanner) {
+        System.out.println("\n=== TANDAI BARANG DIAMBIL ===");
+        viewAllReportedItems();
+
+        if (LoginSystem.reportedItems.isEmpty()) {
+            return;
+        }
+
+        System.out.print("\nMasukkan index barang: ");
+        try {
+            int index = scanner.nextInt();
+            scanner.nextLine();
+
+            if (index >= 0 && index < LoginSystem.reportedItems.size()) {
+                Item item = LoginSystem.reportedItems.get(index);
+                item.setStatus("Claimed");
+                System.out.println("Status barang berhasil diubah!");
+            } else {
+                System.out.println("Index tidak valid!");
+            }
+        } catch (InputMismatchException e) {
+            System.out.println("Input harus berupa angka!");
+            scanner.nextLine();
+        }
     }
 
-    @Override
-    public void manageUsers() {
-        System.out.println(">> Fitur Kelola Mahasiswa Belum Tersedia <<");
+    // Placeholder untuk fitur kelola mahasiswa (belum diimplementasikan)
+    private void manageUsers(Scanner scanner) {
+        System.out.println("Fitur kelola mahasiswa belum diimplementasikan.");
+    }
+
+    /**
+     * Verifikasi kredensial login admin.
+     *
+     * @param username username admin
+     * @param password password admin
+     * @return objek Admin jika cocok, null jika tidak
+     */
+    public static Admin verifyAdminCredentials(String username, String password) {
+        for (User user : LoginSystem.userList) {
+            if (user instanceof Admin) {
+                Admin admin = (Admin) user;
+                if (admin.getUsername().equals(username) && admin.getPassword().equals(password)) {
+                    return admin;
+                }
+            }
+        }
+        return null;
     }
 }

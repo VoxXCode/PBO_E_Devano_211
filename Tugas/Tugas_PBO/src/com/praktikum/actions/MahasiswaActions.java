@@ -1,6 +1,8 @@
 package com.praktikum.actions;
 
+import java.util.Scanner;
+
 public interface MahasiswaActions {
-    void reportItem();
+    void reportItem(Scanner scanner);
     void viewReportItem();
-} 
+}
